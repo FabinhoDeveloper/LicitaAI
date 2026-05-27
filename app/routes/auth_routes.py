@@ -23,7 +23,7 @@ def login(
         return RedirectResponse(url="/?erro=credenciais", status_code=302)
 
     token = create_access_token(data={"sub": user.id})
-    redirect_url = "/admin" if user.user_type == "admin" else "/comum"
+    redirect_url = "/admin/usuarios" if user.user_type == "admin" else "/comum"
     response = RedirectResponse(url=redirect_url, status_code=302)
     set_auth_cookie(response, token)
     return response
@@ -82,6 +82,6 @@ def primeiro_cadastro(
         )
 
     token = create_access_token(data={"sub": user.id})
-    response = RedirectResponse(url="/admin", status_code=302)
+    response = RedirectResponse(url="/admin/usuarios", status_code=302)
     set_auth_cookie(response, token)
     return response

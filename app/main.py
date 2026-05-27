@@ -6,9 +6,50 @@ load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from jose import jwt, JWTError
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request as StarletteRequest
+from starlette.responses import RedirectResponse as StarletteRedirectResponse
 
-from app.config.database import engine, Base
+from app.config.auth import SECRET_KEY, ALGORITHM
+from app.config.database import engine, Base, SessionLocal
+from app.models import User
 from app.routes import home, auth_routes, user_routes
+
+
+class AuthMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: StarletteRequest, call_next):
+        path = request.url.path
+
+        if not path.startswith("/comum") and not path.startswith("/admin"):
+            return await call_next(request)
+
+        token = request.cookies.get("licitai_token")
+        if not token:
+            return StarletteRedirectResponse(url="/")
+
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            user_id = payload.get("sub")
+            if user_id is None:
+                return StarletteRedirectResponse(url="/")
+        except JWTError:
+            return StarletteRedirectResponse(url="/")
+
+        db = SessionLocal()
+        try:
+            user = db.query(User).filter(User.id == int(user_id)).first()
+        finally:
+            db.close()
+
+        if user is None:
+            return StarletteRedirectResponse(url="/")
+
+        if path.startswith("/admin") and user.user_type != "admin":
+            return StarletteRedirectResponse(url="/comum")
+
+        request.state.current_user = user
+        return await call_next(request)
 
 
 @asynccontextmanager
@@ -20,6 +61,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="LicitAI", lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+app.add_middleware(AuthMiddleware)
 
 app.include_router(home.router)
 app.include_router(auth_routes.router)

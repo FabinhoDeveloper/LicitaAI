@@ -1,9 +1,9 @@
 import os
 from datetime import datetime, timedelta, timezone
 
-from fastapi import Cookie, Depends, HTTPException, Request
+from fastapi import Depends, HTTPException, Request
 from fastapi.responses import RedirectResponse
-from jose import JWTError, jwt
+from jose import jwt
 from sqlalchemy.orm import Session
 
 from app.config.database import SessionLocal
@@ -11,7 +11,6 @@ from app.models import User
 
 SECRET_KEY = os.getenv(
     "SECRET_KEY",
-    "8fc56b1a2e3d4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f",
 )
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
@@ -19,6 +18,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60")
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
+    to_encode["sub"] = str(to_encode.get("sub", ""))
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -32,38 +32,16 @@ def get_db():
         db.close()
 
 
-def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
-    token = request.cookies.get("licitai_token")
-    credentials_exception = HTTPException(
-        status_code=302,
-        detail="Não autenticado",
-        headers={"Location": "/"},
-    )
-    if not token:
-        raise credentials_exception
-
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-
-    user = db.query(User).filter(User.id == user_id).first()
+def get_current_user(request: Request) -> User:
+    user = getattr(request.state, "current_user", None)
     if user is None:
-        raise credentials_exception
-
+        raise HTTPException(status_code=401, detail="Não autenticado")
     return user
 
 
 def require_admin(current_user: User = Depends(get_current_user)) -> User:
     if current_user.user_type != "admin":
-        raise HTTPException(
-            status_code=302,
-            detail="Acesso negado",
-            headers={"Location": "/comum"},
-        )
+        raise HTTPException(status_code=403, detail="Acesso negado")
     return current_user
 
 
