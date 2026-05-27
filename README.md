@@ -18,11 +18,10 @@ O sistema **não substitui a revisão humana**. Todo documento gerado é uma min
 
 | Camada | Tecnologia |
 |---|---|
-| Backend | Python 3.11+, FastAPI, SQLAlchemy 2.x (async) |
-| Banco de dados | PostgreSQL 16 + pgvector |
-| IA / RAG | Anthropic API, LangChain, sentence-transformers |
-| Exportação | python-docx-template |
-| Frontend | React 18 + Vite + TypeScript |
+| Backend | Python 3.12+, FastAPI |
+| Banco de dados | MySQL 8.0 |
+| ORM | SQLAlchemy 2.x |
+| Frontend | Jinja2 (templates server-side) |
 | Infraestrutura | Docker, Docker Compose |
 
 ---
@@ -30,9 +29,7 @@ O sistema **não substitui a revisão humana**. Todo documento gerado é uma min
 ## Pré-requisitos
 
 - Docker e Docker Compose instalados
-- Python 3.11+
-- Node.js 18+
-- Chave de API da Anthropic
+- Python 3.12+
 
 ---
 
@@ -43,23 +40,15 @@ O sistema **não substitui a revisão humana**. Todo documento gerado é uma min
 git clone https://github.com/seu-usuario/LicitAI.git
 cd LicitAI
 
-# 2. Configure as variáveis de ambiente
-cp backend/.env.example backend/.env
-# edite o arquivo .env com suas credenciais
+# 2. Crie o ambiente virtual
+python -m venv venv
+source venv/bin/activate
 
-# 3. Suba o banco de dados
+# 3. Instale as dependências
+pip install fastapi uvicorn sqlalchemy jinja2 python-multipart pymysql
+
+# 4. Suba o banco de dados
 docker compose up -d
-
-# 4. Instale as dependências do backend
-cd backend
-pip install -r requirements.txt
-
-# 5. Execute as migrações
-alembic upgrade head
-
-# 6. Instale as dependências do frontend
-cd ../frontend
-npm install
 ```
 
 ---
@@ -67,16 +56,16 @@ npm install
 ## Executando em desenvolvimento
 
 ```bash
-# Backend (na pasta /backend)
-uvicorn app.main:app --reload --port 8000
+# Ative o ambiente virtual
+source venv/bin/activate
 
-# Frontend (na pasta /frontend)
-npm run dev
+# Execute o servidor (com auto-reload)
+python run.py
 ```
 
-Acesse em `http://localhost:5173`
+Acesse em `http://localhost:8000`
 
-A documentação da API estará disponível em `http://localhost:8000/docs`
+A documentação interativa da API estará disponível em `http://localhost:8000/docs`
 
 ---
 
@@ -84,19 +73,15 @@ A documentação da API estará disponível em `http://localhost:8000/docs`
 
 ```
 LicitAI/
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── database.py
-│   │   ├── models/
-│   │   └── routes/
-│   ├── alembic/
-│   ├── requirements.txt
-│   └── .env.example
-├── frontend/
-│   ├── src/
-│   └── vite.config.ts
-├── docker-compose.yml
+├── app/
+│   ├── main.py           # Entrada da aplicação FastAPI
+│   ├── models/           # Modelos SQLAlchemy
+│   ├── routes/           # Rotas da aplicação
+│   ├── services/         # Lógica de negócio
+│   ├── static/           # Arquivos estáticos (CSS, JS, imagens)
+│   └── templates/        # Templates Jinja2
+├── docker-compose.yaml   # Banco de dados MySQL
+├── run.py                # Entrypoint do servidor uvicorn
 └── README.md
 ```
 
