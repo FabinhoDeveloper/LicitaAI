@@ -7,3 +7,12 @@ templates = Jinja2Templates(directory="app/templates")
 @router.get("/")
 def index(request: Request):
     return templates.TemplateResponse(request, "index.html")
+
+@router.get("/comum")
+def comum(request: Request):
+    return templates.TemplateResponse(request, "comum.html")
+
+@router.get("/admin")
+def admin(request: Request):
+    return templates.TemplateResponse(request, "admin.html")
+

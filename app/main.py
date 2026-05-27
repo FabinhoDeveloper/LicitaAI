@@ -6,7 +6,6 @@ from fastapi.staticfiles import StaticFiles
 from app.database import engine, Base
 from app.routes import home
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
