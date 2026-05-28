@@ -1,183 +1,139 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LicitAI - Novo Documento</title>
+{% extends "base.html" %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% block title %}LicitAI - Novo Documento{% endblock %}
 
-    <style>
-        :root {
-            --primary-color: #003d7a;
-            --primary-dark: #002a55;
-            --secondary-color: #ffb800;
-            --secondary-dark: #e09c00;
-            --accent-color: #00a859;
-            --light-bg: #f4f7fb;
-            --text-dark: #1a2a44;
-            --text-muted: #5a6a85;
-            --border-color: #e3e9f2;
-        }
-
-        * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
+{% block page_css %}
+        .tipo-cards {
             display: flex;
-            flex-direction: column;
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-        }
-
-        .top-bar {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: #fff;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-        }
-        .top-bar a { color: #fff; text-decoration: none; }
-        .top-bar a:hover { color: var(--secondary-color); }
-        .top-bar .btn-logout {
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 4px 14px;
-            border-radius: 6px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .top-bar .btn-logout:hover {
-            background: #dc3545;
-            border-color: #dc3545;
-            color: #fff;
-        }
-
-        .navbar-custom {
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .navbar-custom .brand {
-            font-weight: 800;
-            color: var(--primary-color);
-            font-size: 1.25rem;
-            text-decoration: none;
-        }
-        .navbar-custom .brand span { color: var(--secondary-dark); }
-
-        .main-content {
-            flex: 1;
-            display: flex;
-            align-items: center;
+            gap: 24px;
             justify-content: center;
-            padding: 60px 20px;
+            flex-wrap: wrap;
+            padding: 20px 0;
         }
-
-        .placeholder-card {
-            text-align: center;
-            max-width: 500px;
-            padding: 48px 32px;
+        .tipo-card {
             background: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            box-shadow: 0 8px 32px rgba(0,61,122,0.08);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px 32px;
+            width: 240px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
         }
-        .placeholder-card i {
-            font-size: 3.5rem;
-            color: var(--border-color);
-            margin-bottom: 14px;
+        .tipo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 61, 122, 0.1);
+        }
+        .tipo-card.active {
+            border-color: var(--accent-color);
+            background: linear-gradient(180deg, #fff 0%, #f0faf5 100%);
+            cursor: pointer;
+        }
+        .tipo-card.active:hover {
+            border-color: #008c4a;
+            box-shadow: 0 14px 36px rgba(0, 168, 89, 0.2);
+        }
+        .tipo-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .tipo-card .card-icon {
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
             display: block;
         }
-        .placeholder-card h3 {
+        .tipo-card.active .card-icon {
+            color: var(--accent-color);
+        }
+        .tipo-card .card-title {
             font-weight: 800;
-            color: var(--primary-color);
-            font-size: 1.4rem;
-            margin-bottom: 8px;
+            font-size: 1.15rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
-        .placeholder-card p {
+        .tipo-card .card-subtitle {
+            font-size: 0.82rem;
             color: var(--text-muted);
-            font-size: 0.92rem;
-            margin-bottom: 24px;
+            margin-bottom: 14px;
         }
-        .btn-back {
-            background: var(--primary-color);
+        .tipo-card .badge-em-breve {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: var(--primary-dark);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tipo-card .badge-destaque {
+            display: inline-block;
+            background: var(--accent-color);
             color: #fff;
-            border: none;
-            padding: 10px 22px;
+            padding: 6px 16px;
             border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .voltar-link {
+            color: var(--text-muted);
             font-weight: 600;
             font-size: 0.9rem;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
+            gap: 6px;
+            transition: color 0.2s;
         }
-        .btn-back:hover {
-            background: var(--primary-dark);
-            color: #fff;
+        .voltar-link:hover {
+            color: var(--primary-color);
         }
+{% endblock %}
 
-        footer {
-            background-color: #0f1a2e;
-            color: rgba(255,255,255,0.7);
-            text-align: center;
-            padding: 18px 0;
-            font-size: 0.85rem;
-        }
-        footer span { color: var(--secondary-color); font-weight: 600; }
-    </style>
-</head>
-<body>
-
-    <div class="top-bar">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <div>
-                <a href="https://queluz.sp.gov.br" target="_blank" rel="noopener">
-                    <i class="bi bi-building"></i> Prefeitura Municipal de Queluz
-                </a>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <span><i class="bi bi-person-circle"></i> {{ user.first_name }} {{ user.last_name }}</span>
-                <a href="/logout" class="btn-logout"><i class="bi bi-box-arrow-right"></i> Sair</a>
-            </div>
+{% block hero %}
+    <div class="page-hero">
+        <div class="container">
+            <h2><i class="bi bi-file-earmark-plus"></i> Novo Documento</h2>
+            <p>Selecione o tipo de documento que deseja gerar com IA</p>
         </div>
     </div>
+{% endblock %}
 
-    <nav class="navbar-custom">
-        <div class="container">
-            <a href="/home" class="brand">Licit<span>AI</span></a>
-        </div>
-    </nav>
-
-    <div class="main-content">
-        <div class="placeholder-card">
-            <i class="bi bi-file-earmark-plus"></i>
-            <h3>Página de novo documento</h3>
-            <p>A criação de DFD e outros documentos será implementada em breve.</p>
-            <a href="/home" class="btn-back">
+{% block content %}
+    <div class="container">
+        <div class="mb-4">
+            <a href="/home" class="voltar-link">
                 <i class="bi bi-arrow-left"></i> Voltar ao painel
             </a>
         </div>
+
+        <div class="tipo-cards">
+            <div class="tipo-card disabled">
+                <i class="bi bi-clipboard-check card-icon"></i>
+                <div class="card-title">ETP</div>
+                <div class="card-subtitle">Estudo Técnico Preliminar</div>
+                <span class="badge-em-breve">Em breve</span>
+            </div>
+
+            <a href="/documentos/novo/dfd" class="tipo-card active">
+                <i class="bi bi-file-earmark-text card-icon"></i>
+                <div class="card-title">DFD</div>
+                <div class="card-subtitle">Documento de Formalização<br>da Demanda</div>
+                <span class="badge-destaque">Disponível</span>
+            </a>
+
+            <div class="tipo-card disabled">
+                <i class="bi bi-journal-text card-icon"></i>
+                <div class="card-title">TR</div>
+                <div class="card-subtitle">Termo de Referência</div>
+                <span class="badge-em-breve">Em breve</span>
+            </div>
+        </div>
     </div>
-
-    <footer>
-        Desenvolvido por <span>Prefeitura Municipal de Queluz</span>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% endblock %}
