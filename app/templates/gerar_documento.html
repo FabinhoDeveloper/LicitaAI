@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}LicitAI - {{ tipo_label }}{% endblock %}
+
+{% block page_css %}
+        .form-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+        }
+        .form-card .card-section-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1rem;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-bg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-card .card-section-title i {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .form-control, .form-select {
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.92rem;
+            color: var(--text-dark);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 61, 122, 0.12);
+        }
+        textarea.form-control {
+            min-height: 110px;
+            resize: vertical;
+        }
+        .text-muted-hint {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .btn-gerar {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .btn-gerar:hover {
+            background: #008c4a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0, 168, 89, 0.3);
+        }
+        .btn-gerar:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-cancel {
+            background: #fff;
+            color: var(--text-muted);
+            border: 1.5px solid var(--border-color);
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-cancel:hover {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+        }
+        .step-dot.active {
+            background: var(--accent-color);
+        }
+        .step-dot.done {
+            background: var(--primary-color);
+        }
+        .step-line {
+            width: 40px;
+            height: 2px;
+            background: var(--border-color);
+            align-self: center;
+        }
+        .step-line.done {
+            background: var(--primary-color);
+        }
+
+        .voltar-link {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+        .voltar-link:hover {
+            color: var(--primary-color);
+        }
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="max-width: 800px;">
+        <div class="mb-4">
+            <a href="/documentos/novo" class="voltar-link">
+                <i class="bi bi-arrow-left"></i> Escolher outro tipo
+            </a>
+        </div>
+
+        <div class="step-indicator">
+            <span class="step-dot done"></span>
+            <span class="step-line done"></span>
+            <span class="step-dot active"></span>
+            <span class="step-line"></span>
+            <span class="step-dot"></span>
+        </div>
+
+        <form action="/documentos/gerar" method="post" id="form-gerar">
+            <input type="hidden" name="tipo" value="{{ tipo }}">
+
+            <!-- Bloco 1 — Identificação -->
+            <div class="form-card">
+                <div class="card-section-title">
+                    <i class="bi bi-tag"></i> Identificação
+                </div>
+
+                <div class="mb-3">
+                    <label for="titulo" class="form-label">Título do documento *</label>
+                    <input type="text" class="form-control" id="titulo" name="titulo"
+                           placeholder="Ex: Aquisição de equipamentos de TI para o setor de educação"
+                           required>
+                    <div class="text-muted-hint">Um título descritivo que identifique o documento.</div>
+                </div>
+
+                <div class="mb-0">
+                    <label for="setor_demandante" class="form-label">Setor demandante *</label>
+                    <input type="text" class="form-control" id="setor_demandante"
+                           name="setor_demandante"
+                           placeholder="Ex: Secretaria Municipal de Educação"
+                           required>
+                    <div class="text-muted-hint">Setor da prefeitura responsável pela demanda.</div>
+                </div>
+            </div>
+
+            <!-- Bloco 2 — Objeto e Justificativa -->
+            <div class="form-card">
+                <div class="card-section-title">
+                    <i class="bi bi-file-earmark-text"></i> Objeto e Justificativa
+                </div>
+
+                <div class="mb-3">
+                    <label for="objeto" class="form-label">Objeto da contratação *</label>
+                    <textarea class="form-control" id="objeto" name="objeto"
+                              placeholder="Descreva o que será contratado. Ex: Aquisição de 30 notebooks, incluindo garantia e suporte técnico por 12 meses."
+                              required></textarea>
+                    <div class="text-muted-hint">Descreva de forma clara e objetiva o que se pretende contratar.</div>
+                </div>
+
+                <div class="mb-0">
+                    <label for="justificativa" class="form-label">Justificativa da necessidade *</label>
+                    <textarea class="form-control" id="justificativa" name="justificativa"
+                              placeholder="Explique por que esta contratação é necessária. Ex: Os equipamentos atuais estão obsoletos, comprometendo a eficiência dos serviços prestados."
+                              required></textarea>
+                    <div class="text-muted-hint">Detalhe os motivos que tornam a contratação essencial.</div>
+                </div>
+            </div>
+
+            <!-- Bloco 3 — Detalhamento (opcional) -->
+            <div class="form-card">
+                <div class="card-section-title">
+                    <i class="bi bi-three-dots"></i> Detalhamento
+                    <small class="text-muted fw-normal ms-2">(opcional)</small>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="valor_estimado" class="form-label">Valor estimado</label>
+                        <input type="text" class="form-control" id="valor_estimado"
+                               name="valor_estimado"
+                               placeholder="Ex: R$ 120.000,00">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="prazo_execucao" class="form-label">Prazo de execução</label>
+                        <input type="text" class="form-control" id="prazo_execucao"
+                               name="prazo_execucao"
+                               placeholder="Ex: 90 dias">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="modalidade" class="form-label">Modalidade sugerida</label>
+                    <select class="form-select" id="modalidade" name="modalidade">
+                        <option value="">Selecione uma modalidade (opcional)</option>
+                        <option value="pregão eletrônico">Pregão Eletrônico</option>
+                        <option value="pregão presencial">Pregão Presencial</option>
+                        <option value="concorrência">Concorrência</option>
+                        <option value="concurso">Concurso</option>
+                        <option value="leilão">Leilão</option>
+                        <option value="diálogo competitivo">Diálogo Competitivo</option>
+                        <option value="dispensa">Dispensa de Licitação</option>
+                        <option value="inexigibilidade">Inexigibilidade</option>
+                    </select>
+                </div>
+
+                <div class="mb-0">
+                    <label for="observacoes" class="form-label">Observações adicionais</label>
+                    <textarea class="form-control" id="observacoes" name="observacoes"
+                              placeholder="Informações complementares relevantes para o documento..."
+                              style="min-height: 80px;"></textarea>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/documentos/novo" class="btn-cancel">
+                    <i class="bi bi-x-lg"></i> Cancelar
+                </a>
+                <button type="submit" class="btn-gerar" id="btn-gerar">
+                    <i class="bi bi-stars"></i> Gerar documento com IA
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.getElementById('form-gerar').addEventListener('submit', function () {
+            const btn = document.getElementById('btn-gerar');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Gerando...';
+        });
+    </script>
+{% endblock %}
