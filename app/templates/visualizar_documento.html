@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LicitAI - Painel</title>
+    <title>LicitAI - {{ documento.title }}</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
@@ -78,46 +78,78 @@
         }
         .navbar-custom .brand span { color: var(--secondary-dark); }
 
-        .page-hero {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: #fff;
-            padding: 40px 0;
-        }
-        .page-hero h2 {
-            color: #fff;
-            font-weight: 800;
-            font-size: 1.8rem;
-            margin: 0;
-        }
-        .page-hero p {
-            color: rgba(255,255,255,0.85);
-            margin: 4px 0 0;
-            font-size: 0.95rem;
-        }
-
         .main-content {
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
+            padding: 32px 0 60px;
         }
 
-        .empty-dashboard {
-            text-align: center;
-            color: var(--text-muted);
-            max-width: 500px;
+        .doc-header {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
         }
-        .empty-dashboard i {
-            font-size: 4rem;
-            color: var(--border-color);
-            margin-bottom: 16px;
-            display: block;
-        }
-        .empty-dashboard h4 {
-            font-weight: 700;
+        .doc-header h2 {
+            font-weight: 800;
             color: var(--primary-color);
-            margin-bottom: 8px;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+        .doc-header .meta {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+        .doc-header .meta span {
+            margin-right: 16px;
+        }
+        .doc-header .doc-type-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .badge-dfd {
+            background: #e8f5fd;
+            color: #0056a6;
+        }
+
+        .btn-back {
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn-back:hover {
+            background: var(--primary-dark);
+            color: #fff;
+        }
+        .btn-download {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn-download:hover {
+            background: #008c4a;
+            color: #fff;
         }
 
         footer {
@@ -152,18 +184,27 @@
         </div>
     </nav>
 
-    <div class="page-hero">
-        <div class="container">
-            <h2>Bem-vindo, {{ user.first_name }}!</h2>
-            <p>Painel do usuário</p>
-        </div>
-    </div>
-
     <div class="main-content">
-        <div class="empty-dashboard">
-            <i class="bi bi-grid"></i>
-            <h4>Módulos em desenvolvimento</h4>
-            <p>Os módulos de licitações estarão disponíveis em breve. Fique atento às novidades.</p>
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="/home" class="btn-back">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+                {% if documento.file_path %}
+                <a href="/documentos/{{ documento.id }}/download" class="btn-download">
+                    <i class="bi bi-download"></i> Baixar DOCX
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="doc-header">
+                <h2>{{ documento.title }}</h2>
+                <div class="meta">
+                    <span><i class="bi bi-calendar"></i> {{ documento.created_at.strftime('%d/%m/%Y às %H:%M') }}</span>
+                    <span class="doc-type-badge badge-dfd">{{ documento.type.upper() }}</span>
+                    <span><i class="bi bi-person"></i> {{ user.first_name }} {{ user.last_name }}</span>
+                </div>
+            </div>
         </div>
     </div>
 

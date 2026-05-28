@@ -16,14 +16,14 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.config.auth import SECRET_KEY, ALGORITHM
 from app.config.database import engine, Base, SessionLocal
 from app.models import User
-from app.routes import home, auth_routes, user_routes
+from app.routes import home, auth_routes, user_routes, document_routes
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: StarletteRequest, call_next):
         path = request.url.path
 
-        if not path.startswith("/home") and not path.startswith("/admin"):
+        if not path.startswith("/home") and not path.startswith("/admin") and not path.startswith("/documentos"):
             return await call_next(request)
 
         token = request.cookies.get("licitai_token")
@@ -77,3 +77,4 @@ app.add_middleware(AuthMiddleware)
 app.include_router(home.router)
 app.include_router(auth_routes.router)
 app.include_router(user_routes.router)
+app.include_router(document_routes.router)
