@@ -21,7 +21,7 @@ def index(request: Request, db: Session = Depends(get_db)):
     )
 
 
-@router.get("/comum")
+@router.get("/home")
 def comum(request: Request, user: User = Depends(get_current_user)):
     return templates.TemplateResponse(
         request,
