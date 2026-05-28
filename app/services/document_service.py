@@ -39,12 +39,16 @@ def create_document(
     title: str,
     doc_type: str = "dfd",
     file_path: Optional[str] = None,
+    content: Optional[str] = None,
+    fontes_rag: Optional[str] = None,
 ) -> Document:
     document = Document(
         user_id=user_id,
         title=title,
         type=doc_type,
         file_path=file_path,
+        content=content,
+        fontes_rag=fontes_rag,
     )
     db.add(document)
     db.commit()

@@ -7,6 +7,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.config.auth import get_db, get_current_user
 from app.models import User
 from app.services.document_service import get_document_by_id
+from app.services.ai_service import deserialize_secoes
 
 router = APIRouter(prefix="/documentos")
 templates = Jinja2Templates(directory="app/templates")
@@ -31,10 +32,20 @@ def visualizar_documento(
     documento = get_document_by_id(db, document_id)
     if not documento or documento.user_id != user.id:
         raise StarletteHTTPException(status_code=404)
+
+    conteudo_secoes = None
+    if documento.content:
+        conteudo_secoes = deserialize_secoes(documento.content)
+
     return templates.TemplateResponse(
         request,
         "visualizar_documento.html",
-        {"request": request, "user": user, "documento": documento},
+        {
+            "request": request,
+            "user": user,
+            "documento": documento,
+            "conteudo_secoes": conteudo_secoes,
+        },
     )
 
 
