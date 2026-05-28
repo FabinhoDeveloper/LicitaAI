@@ -1,100 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LicitAI - Painel</title>
+{% extends "base.html" %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% block title %}LicitAI - Painel{% endblock %}
 
-    <style>
-        :root {
-            --primary-color: #003d7a;
-            --primary-dark: #002a55;
-            --secondary-color: #ffb800;
-            --secondary-dark: #e09c00;
-            --accent-color: #00a859;
-            --light-bg: #f4f7fb;
-            --text-dark: #1a2a44;
-            --text-muted: #5a6a85;
-            --border-color: #e3e9f2;
-        }
-
-        * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-        }
-
-        .top-bar {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: #fff;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-        }
-        .top-bar a { color: #fff; text-decoration: none; }
-        .top-bar a:hover { color: var(--secondary-color); }
-        .top-bar .btn-logout {
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 4px 14px;
-            border-radius: 6px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .top-bar .btn-logout:hover {
-            background: #dc3545;
-            border-color: #dc3545;
-            color: #fff;
-        }
-
-        .navbar-custom {
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .navbar-custom .brand {
-            font-weight: 800;
-            color: var(--primary-color);
-            font-size: 1.25rem;
-            text-decoration: none;
-        }
-        .navbar-custom .brand span { color: var(--secondary-dark); }
-
-        .page-hero {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: #fff;
-            padding: 40px 0;
-        }
-        .page-hero h2 {
-            color: #fff;
-            font-weight: 800;
-            font-size: 1.8rem;
-            margin: 0;
-        }
-        .page-hero p {
-            color: rgba(255,255,255,0.85);
-            margin: 4px 0 0;
-            font-size: 0.95rem;
-        }
-
+{% block page_css %}
         .btn-novo-documento {
             background: var(--accent-color);
             color: #fff;
@@ -115,11 +23,6 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 18px rgba(0, 168, 89, 0.3);
             color: #fff;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 32px 0 60px;
         }
 
         .documentos-toolbar {
@@ -299,39 +202,9 @@
             background: #008c4a;
             color: #fff;
         }
+{% endblock %}
 
-        footer {
-            background-color: #0f1a2e;
-            color: rgba(255,255,255,0.7);
-            text-align: center;
-            padding: 18px 0;
-            font-size: 0.85rem;
-        }
-        footer span { color: var(--secondary-color); font-weight: 600; }
-    </style>
-</head>
-<body>
-
-    <div class="top-bar">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <div>
-                <a href="https://queluz.sp.gov.br" target="_blank" rel="noopener">
-                    <i class="bi bi-building"></i> Prefeitura Municipal de Queluz
-                </a>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <span><i class="bi bi-person-circle"></i> {{ user.first_name }} {{ user.last_name }}</span>
-                <a href="/logout" class="btn-logout"><i class="bi bi-box-arrow-right"></i> Sair</a>
-            </div>
-        </div>
-    </div>
-
-    <nav class="navbar-custom">
-        <div class="container">
-            <a href="/home" class="brand">Licit<span>AI</span></a>
-        </div>
-    </nav>
-
+{% block hero %}
     <div class="page-hero">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
@@ -345,175 +218,166 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <div class="main-content">
-        <div class="container">
-
-            <div class="documentos-toolbar">
-                <form method="get" action="/home" class="row g-3 align-items-center">
-                    <div class="col-md-5">
-                        <div class="position-relative">
-                            <i class="bi bi-search search-icon"></i>
-                            <input
-                                type="text"
-                                name="search"
-                                class="search-input"
-                                placeholder="Buscar por nome do documento..."
-                                value="{{ search }}"
-                            >
-                        </div>
+{% block content %}
+    <div class="container">
+        <div class="documentos-toolbar">
+            <form method="get" action="/home" class="row g-3 align-items-center">
+                <div class="col-md-5">
+                    <div class="position-relative">
+                        <i class="bi bi-search search-icon"></i>
+                        <input
+                            type="text"
+                            name="search"
+                            class="search-input"
+                            placeholder="Buscar por nome do documento..."
+                            value="{{ search }}"
+                        >
                     </div>
-                    <div class="col-md-4">
-                        <select name="order_by" class="filter-select" onchange="this.form.submit()">
-                            <option value="created_at_desc" {% if order_by == "created_at_desc" %}selected{% endif %}>Mais recentes primeiro</option>
-                            <option value="created_at_asc" {% if order_by == "created_at_asc" %}selected{% endif %}>Mais antigos primeiro</option>
-                            <option value="title_asc" {% if order_by == "title_asc" %}selected{% endif %}>Ordem alfabética (A-Z)</option>
-                            <option value="title_desc" {% if order_by == "title_desc" %}selected{% endif %}>Ordem alfabética (Z-A)</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 text-end">
-                        <button type="submit" class="btn-search">
-                            <i class="bi bi-search"></i> Buscar
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {% if documentos %}
-            <div class="documentos-table-wrapper">
-                <table class="documentos-table">
-                    <thead>
-                        <tr>
-                            <th>Documento</th>
-                            <th>Tipo</th>
-                            <th>Data</th>
-                            <th class="text-end">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for doc in documentos %}
-                        <tr>
-                            <td>
-                                <span class="doc-title">{{ doc.title }}</span>
-                            </td>
-                            <td>
-                                <span class="doc-type-badge badge-dfd">{{ doc.type.upper() }}</span>
-                            </td>
-                            <td>
-                                <span class="doc-date">{{ doc.created_at.strftime('%d/%m/%Y') }}</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="/documentos/{{ doc.id }}" class="btn-action" title="Visualizar">
-                                    <i class="bi bi-eye"></i> Ver
-                                </a>
-                                {% if doc.file_path %}
-                                <a href="/documentos/{{ doc.id }}/download" class="btn-action" title="Download">
-                                    <i class="bi bi-download"></i> Baixar
-                                </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="documentos-table-wrapper">
-                <table class="documentos-table">
-                    <thead>
-                        <tr>
-                            <th>Documento</th>
-                            <th>Tipo</th>
-                            <th>Data</th>
-                            <th class="text-end">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span class="doc-title">DFD - Aquisição de Equipamentos TI</span>
-                            </td>
-                            <td>
-                                <span class="doc-type-badge badge-dfd">DFD</span>
-                            </td>
-                            <td>
-                                <span class="doc-date">15/03/2026</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="#" class="btn-action" title="Visualizar">
-                                    <i class="bi bi-eye"></i> Ver
-                                </a>
-                                <a href="#" class="btn-action" title="Download">
-                                    <i class="bi bi-download"></i> Baixar
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="doc-title">DFD - Reforma Escola Municipal</span>
-                            </td>
-                            <td>
-                                <span class="doc-type-badge badge-dfd">DFD</span>
-                            </td>
-                            <td>
-                                <span class="doc-date">10/04/2026</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="#" class="btn-action" title="Visualizar">
-                                    <i class="bi bi-eye"></i> Ver
-                                </a>
-                                <a href="#" class="btn-action" title="Download">
-                                    <i class="bi bi-download"></i> Baixar
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="doc-title">DFD - Serviços de Limpeza Predial</span>
-                            </td>
-                            <td>
-                                <span class="doc-type-badge badge-dfd">DFD</span>
-                            </td>
-                            <td>
-                                <span class="doc-date">02/05/2026</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="#" class="btn-action" title="Visualizar">
-                                    <i class="bi bi-eye"></i> Ver
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="doc-title">DFD - Locação de Veículos</span>
-                            </td>
-                            <td>
-                                <span class="doc-type-badge badge-dfd">DFD</span>
-                            </td>
-                            <td>
-                                <span class="doc-date">20/05/2026</span>
-                            </td>
-                            <td class="text-end">
-                                <a href="#" class="btn-action" title="Visualizar">
-                                    <i class="bi bi-eye"></i> Ver
-                                </a>
-                                <a href="#" class="btn-action" title="Download">
-                                    <i class="bi bi-download"></i> Baixar
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
-
+                </div>
+                <div class="col-md-4">
+                    <select name="order_by" class="filter-select" onchange="this.form.submit()">
+                        <option value="created_at_desc" {% if order_by == "created_at_desc" %}selected{% endif %}>Mais recentes primeiro</option>
+                        <option value="created_at_asc" {% if order_by == "created_at_asc" %}selected{% endif %}>Mais antigos primeiro</option>
+                        <option value="title_asc" {% if order_by == "title_asc" %}selected{% endif %}>Ordem alfabética (A-Z)</option>
+                        <option value="title_desc" {% if order_by == "title_desc" %}selected{% endif %}>Ordem alfabética (Z-A)</option>
+                    </select>
+                </div>
+                <div class="col-md-3 text-end">
+                    <button type="submit" class="btn-search">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
         </div>
+
+        {% if documentos %}
+        <div class="documentos-table-wrapper">
+            <table class="documentos-table">
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Tipo</th>
+                        <th>Data</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in documentos %}
+                    <tr>
+                        <td>
+                            <span class="doc-title">{{ doc.title }}</span>
+                        </td>
+                        <td>
+                            <span class="doc-type-badge badge-dfd">{{ doc.type.upper() }}</span>
+                        </td>
+                        <td>
+                            <span class="doc-date">{{ doc.created_at.strftime('%d/%m/%Y') }}</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="/documentos/{{ doc.id }}" class="btn-action" title="Visualizar">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                            {% if doc.file_path %}
+                            <a href="/documentos/{{ doc.id }}/download" class="btn-action" title="Download">
+                                <i class="bi bi-download"></i> Baixar
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="documentos-table-wrapper">
+            <table class="documentos-table">
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Tipo</th>
+                        <th>Data</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="doc-title">DFD - Aquisição de Equipamentos TI</span>
+                        </td>
+                        <td>
+                            <span class="doc-type-badge badge-dfd">DFD</span>
+                        </td>
+                        <td>
+                            <span class="doc-date">15/03/2026</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="#" class="btn-action" title="Visualizar">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                            <a href="#" class="btn-action" title="Download">
+                                <i class="bi bi-download"></i> Baixar
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="doc-title">DFD - Reforma Escola Municipal</span>
+                        </td>
+                        <td>
+                            <span class="doc-type-badge badge-dfd">DFD</span>
+                        </td>
+                        <td>
+                            <span class="doc-date">10/04/2026</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="#" class="btn-action" title="Visualizar">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                            <a href="#" class="btn-action" title="Download">
+                                <i class="bi bi-download"></i> Baixar
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="doc-title">DFD - Serviços de Limpeza Predial</span>
+                        </td>
+                        <td>
+                            <span class="doc-type-badge badge-dfd">DFD</span>
+                        </td>
+                        <td>
+                            <span class="doc-date">02/05/2026</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="#" class="btn-action" title="Visualizar">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="doc-title">DFD - Locação de Veículos</span>
+                        </td>
+                        <td>
+                            <span class="doc-type-badge badge-dfd">DFD</span>
+                        </td>
+                        <td>
+                            <span class="doc-date">20/05/2026</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="#" class="btn-action" title="Visualizar">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                            <a href="#" class="btn-action" title="Download">
+                                <i class="bi bi-download"></i> Baixar
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
     </div>
-
-    <footer>
-        Desenvolvido por <span>Prefeitura Municipal de Queluz</span>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% endblock %}

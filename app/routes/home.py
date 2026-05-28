@@ -49,5 +49,5 @@ def admin(request: Request, admin: User = Depends(require_admin)):
     return templates.TemplateResponse(
         request,
         "admin.html",
-        {"request": request, "admin": admin},
+        {"request": request, "admin": admin, "user": admin},
     )

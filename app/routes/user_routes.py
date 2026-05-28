@@ -27,7 +27,7 @@ def list_users(
     return templates.TemplateResponse(
         request,
         "admin/usuarios.html",
-        {"request": request, "admin": admin, "users": users},
+        {"request": request, "admin": admin, "user": admin, "users": users},
     )
 
 
@@ -58,7 +58,7 @@ def create(
         return templates.TemplateResponse(
             request,
             "admin/usuarios.html",
-            {"request": request, "admin": admin, "users": users, "erro": str(e)},
+            {"request": request, "admin": admin, "user": admin, "users": users, "erro": str(e)},
         )
     return RedirectResponse(url="/admin/usuarios", status_code=302)
 
@@ -94,7 +94,7 @@ def edit(
             "admin/usuarios.html",
             {
                 "request": request,
-                "admin": admin,
+                "admin": admin, "user": admin,
                 "users": users,
                 "erro": str(e),
                 "edit_user_id": user_id,
@@ -117,6 +117,6 @@ def delete(
         return templates.TemplateResponse(
             request,
             "admin/usuarios.html",
-            {"request": request, "admin": admin, "users": users, "erro": str(e)},
+            {"request": request, "admin": admin, "user": admin, "users": users, "erro": str(e)},
         )
     return RedirectResponse(url="/admin/usuarios", status_code=302)
