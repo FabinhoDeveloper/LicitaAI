@@ -16,7 +16,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.config.auth import SECRET_KEY, ALGORITHM
 from app.config.database import engine, Base, SessionLocal
 from app.models import User
-from app.routes import home, auth_routes, user_routes, document_routes
+from app.routes import home, auth_routes, user_routes, document_routes, ai_routes
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -78,3 +78,4 @@ app.include_router(home.router)
 app.include_router(auth_routes.router)
 app.include_router(user_routes.router)
 app.include_router(document_routes.router)
+app.include_router(ai_routes.router)

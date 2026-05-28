@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+
+{% block title %}LicitAI - Gerando documento{% endblock %}
+
+{% block page_css %}
+        .loading-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .loading-icon {
+            margin-bottom: 28px;
+        }
+        .pulse-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .pulse-dots .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+        .pulse-dots .dot:nth-child(2) { animation-delay: 0.2s; }
+        .pulse-dots .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes pulse {
+            0%, 80%, 100% {
+                transform: scale(0.6);
+                opacity: 0.4;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .loading-message {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 24px;
+            min-height: 28px;
+            transition: opacity 0.4s;
+        }
+
+        .loading-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* --- Error state --- */
+        .error-card {
+            background: #fff;
+            border: 1px solid #f5c6cb;
+            border-radius: 12px;
+            padding: 28px;
+            margin-top: 32px;
+            text-align: center;
+        }
+        .error-card i {
+            font-size: 2.5rem;
+            color: #dc3545;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .error-card h5 {
+            color: #dc3545;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .error-card p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .btn-retry {
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-retry:hover {
+            background: var(--primary-dark);
+            color: #fff;
+        }
+
+        /* --- Review form (hidden initially, shown when done) --- */
+        .review-wrapper {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .form-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+        }
+        .secao-bloco {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .secao-bloco:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .secao-bloco .secao-titulo-label {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+        .secao-bloco textarea {
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 14px;
+            font-size: 0.92rem;
+            color: var(--text-dark);
+            width: 100%;
+            min-height: 160px;
+            resize: vertical;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            line-height: 1.7;
+        }
+        .secao-bloco textarea:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 168, 89, 0.12);
+            outline: none;
+        }
+
+        .fontes-rag {
+            background: #f8faff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+        .fontes-rag h6 {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 0.88rem;
+            margin-bottom: 8px;
+        }
+        .fontes-rag .fonte-item {
+            display: inline-block;
+            background: #e8f5fd;
+            color: #0056a6;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin: 2px 4px 2px 0;
+        }
+
+        .btn-salvar {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .btn-salvar:hover {
+            background: #008c4a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(0, 168, 89, 0.3);
+        }
+        .btn-salvar:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-cancel {
+            background: #fff;
+            color: var(--text-muted);
+            border: 1.5px solid var(--border-color);
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-cancel:hover {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+
+        .info-banner {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            font-size: 0.87rem;
+            color: #6d5e00;
+        }
+        .info-banner i {
+            color: var(--secondary-dark);
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 28px;
+        }
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--border-color);
+        }
+        .step-dot.active {
+            background: var(--accent-color);
+        }
+        .step-dot.done {
+            background: var(--primary-color);
+        }
+        .step-line {
+            width: 40px;
+            height: 2px;
+            background: var(--border-color);
+            align-self: center;
+        }
+        .step-line.done {
+            background: var(--primary-color);
+        }
+{% endblock %}
+
+{% block hero %}
+    <div class="page-hero" id="hero-section">
+        <div class="container">
+            <h2 id="hero-title"><i class="bi bi-stars"></i> Gerando documento</h2>
+            <p id="hero-subtitle">Nossa IA está analisando os dados e redigindo seu documento</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <!-- LOADING STATE -->
+    <div class="container loading-wrapper" id="loading-area">
+        <div class="loading-icon">
+            <div class="pulse-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        <div class="loading-message" id="loading-message">Consultando base de conhecimento...</div>
+        <div class="loading-subtitle">Isso pode levar alguns segundos</div>
+    </div>
+
+    <!-- ERROR STATE (hidden) -->
+    <div class="container" id="error-area" style="display:none; max-width: 500px;">
+        <div class="error-card">
+            <i class="bi bi-exclamation-circle"></i>
+            <h5>Erro na geração</h5>
+            <p id="error-message">Ocorreu um erro ao gerar o documento.</p>
+            <a href="/documentos/novo/{{ tipo }}" class="btn-retry">
+                <i class="bi bi-arrow-repeat"></i> Tentar novamente
+            </a>
+        </div>
+    </div>
+
+    <!-- REVIEW FORM (hidden, shown when done) -->
+    <div class="container review-wrapper" id="review-area">
+        <div class="step-indicator">
+            <span class="step-dot done"></span>
+            <span class="step-line done"></span>
+            <span class="step-dot done"></span>
+            <span class="step-line done"></span>
+            <span class="step-dot active"></span>
+        </div>
+
+        <div class="info-banner">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            Revise o conteúdo gerado pela IA em cada seção abaixo. Você pode editar livremente
+            os textos antes de salvar. Após salvar, o documento ficará disponível no seu painel.
+        </div>
+
+        <div class="fontes-rag" id="fontes-rag-area" style="display:none;">
+            <h6><i class="bi bi-journal-bookmark-fill"></i> Fontes consultadas (RAG)</h6>
+            <div id="fontes-rag-list"></div>
+        </div>
+
+        <form action="/documentos/salvar" method="post" id="form-salvar">
+            <input type="hidden" name="tipo" value="{{ tipo }}">
+            <input type="hidden" name="titulo" value="{{ titulo }}">
+            <input type="hidden" name="fontes_rag" id="hidden-fontes-rag" value="">
+
+            <div class="form-card" id="secoes-container">
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/documentos/novo/{{ tipo }}" class="btn-cancel">
+                    <i class="bi bi-x-lg"></i> Descartar
+                </a>
+                <button type="submit" class="btn-salvar" id="btn-salvar">
+                    <i class="bi bi-check2-circle"></i> Salvar documento
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const taskId = "{{ task_id }}";
+        const messages = [
+            "Consultando base de conhecimento...",
+            "Analisando legislação aplicável...",
+            "Estruturando as seções do documento...",
+            "Revisando fundamentação jurídica...",
+            "Formatando o documento...",
+            "Finalizando documento..."
+        ];
+        let msgIndex = 0;
+        let pollInterval;
+        let msgInterval;
+
+        function rotateMessage() {
+            const el = document.getElementById('loading-message');
+            el.style.opacity = '0';
+            setTimeout(() => {
+                msgIndex = (msgIndex + 1) % messages.length;
+                el.textContent = messages[msgIndex];
+                el.style.opacity = '1';
+            }, 400);
+        }
+
+        function buildReviewForm(data) {
+            const container = document.getElementById('secoes-container');
+            let html = '';
+
+            data.secoes.forEach((secao, i) => {
+                html += '<div class="secao-bloco">';
+                html += '<input type="hidden" name="secao_titulo_' + i + '" value="' + escapeHtml(secao.titulo) + '">';
+                html += '<label class="secao-titulo-label">' + escapeHtml(secao.titulo) + '</label>';
+                html += '<textarea name="secao_conteudo_' + i + '">' + escapeHtml(secao.conteudo) + '</textarea>';
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+
+            if (data.fontes_rag && data.fontes_rag.length > 0) {
+                document.getElementById('fontes-rag-area').style.display = 'block';
+                const fontesList = document.getElementById('fontes-rag-list');
+                fontesList.innerHTML = data.fontes_rag.map(f =>
+                    '<span class="fonte-item"><i class="bi bi-file-earmark"></i> ' + escapeHtml(f) + '</span>'
+                ).join('');
+                document.getElementById('hidden-fontes-rag').value = data.fontes_rag.join(',');
+            }
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function showReview(data) {
+            document.getElementById('loading-area').style.display = 'none';
+            document.getElementById('error-area').style.display = 'none';
+            document.getElementById('review-area').style.display = 'block';
+
+            document.getElementById('hero-title').innerHTML = '<i class="bi bi-pencil-square"></i> Revisar documento gerado';
+            document.getElementById('hero-subtitle').textContent = 'Revise e edite as seções antes de salvar';
+
+            buildReviewForm(data);
+        }
+
+        function showError(errorMsg) {
+            document.getElementById('loading-area').style.display = 'none';
+            document.getElementById('review-area').style.display = 'none';
+            document.getElementById('error-area').style.display = 'block';
+            document.getElementById('error-message').textContent = errorMsg || 'Ocorreu um erro ao gerar o documento.';
+        }
+
+        function pollStatus() {
+            fetch('/documentos/gerar-status/' + taskId)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'done') {
+                        clearInterval(pollInterval);
+                        clearInterval(msgInterval);
+                        showReview(data);
+                    } else if (data.status === 'error') {
+                        clearInterval(pollInterval);
+                        clearInterval(msgInterval);
+                        showError(data.error);
+                    } else if (data.status === 'not_found') {
+                        clearInterval(pollInterval);
+                        clearInterval(msgInterval);
+                        showError('Task de geração não encontrada. Tente novamente.');
+                    }
+                })
+                .catch(err => {
+                    console.error('Poll error:', err);
+                });
+        }
+
+        msgInterval = setInterval(rotateMessage, 4000);
+        pollInterval = setInterval(pollStatus, 2000);
+
+        document.getElementById('form-salvar').addEventListener('submit', function () {
+            const btn = document.getElementById('btn-salvar');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Salvando...';
+        });
+    </script>
+{% endblock %}
