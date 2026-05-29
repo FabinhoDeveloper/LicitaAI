@@ -292,91 +292,14 @@
         </div>
         {% else %}
         <div class="documentos-table-wrapper">
-            <table class="documentos-table">
-                <thead>
-                    <tr>
-                        <th>Documento</th>
-                        <th>Tipo</th>
-                        <th>Data</th>
-                        <th class="text-end">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <span class="doc-title">DFD - Aquisição de Equipamentos TI</span>
-                        </td>
-                        <td>
-                            <span class="doc-type-badge badge-dfd">DFD</span>
-                        </td>
-                        <td>
-                            <span class="doc-date">15/03/2026</span>
-                        </td>
-                        <td class="text-end">
-                            <a href="#" class="btn-action" title="Visualizar">
-                                <i class="bi bi-eye"></i> Ver
-                            </a>
-                            <a href="#" class="btn-action" title="Download">
-                                <i class="bi bi-download"></i> Baixar
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="doc-title">DFD - Reforma Escola Municipal</span>
-                        </td>
-                        <td>
-                            <span class="doc-type-badge badge-dfd">DFD</span>
-                        </td>
-                        <td>
-                            <span class="doc-date">10/04/2026</span>
-                        </td>
-                        <td class="text-end">
-                            <a href="#" class="btn-action" title="Visualizar">
-                                <i class="bi bi-eye"></i> Ver
-                            </a>
-                            <a href="#" class="btn-action" title="Download">
-                                <i class="bi bi-download"></i> Baixar
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="doc-title">DFD - Serviços de Limpeza Predial</span>
-                        </td>
-                        <td>
-                            <span class="doc-type-badge badge-dfd">DFD</span>
-                        </td>
-                        <td>
-                            <span class="doc-date">02/05/2026</span>
-                        </td>
-                        <td class="text-end">
-                            <a href="#" class="btn-action" title="Visualizar">
-                                <i class="bi bi-eye"></i> Ver
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="doc-title">DFD - Locação de Veículos</span>
-                        </td>
-                        <td>
-                            <span class="doc-type-badge badge-dfd">DFD</span>
-                        </td>
-                        <td>
-                            <span class="doc-date">20/05/2026</span>
-                        </td>
-                        <td class="text-end">
-                            <a href="#" class="btn-action" title="Visualizar">
-                                <i class="bi bi-eye"></i> Ver
-                            </a>
-                            <a href="#" class="btn-action" title="Download">
-                                <i class="bi bi-download"></i> Baixar
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="empty-state">
+                <i class="bi bi-file-earmark-text"></i>
+                <h5>Nenhum documento encontrado</h5>
+                <p>Você ainda não gerou nenhum documento. Crie seu primeiro DFD agora mesmo.</p>
+                <a href="/documentos/novo" class="btn-novo">
+                    <i class="bi bi-plus-lg"></i> Gerar novo documento
+                </a>
+            </div>
         </div>
         {% endif %}
     </div>
