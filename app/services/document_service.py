@@ -54,3 +54,17 @@ def create_document(
     db.commit()
     db.refresh(document)
     return document
+
+
+def update_document_file_path(
+    db: Session,
+    document_id: int,
+    file_path: str,
+) -> Optional[Document]:
+    document = db.query(Document).filter(Document.id == document_id).first()
+    if not document:
+        return None
+    document.file_path = file_path
+    db.commit()
+    db.refresh(document)
+    return document

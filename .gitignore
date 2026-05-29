@@ -13,3 +13,8 @@ build/
 
 # ChromaDB
 app/data/chroma_db/
+
+# Documentos gerados em runtime (output do sistema)
+app/data/documentos_gerados/*.docx
+app/data/exemplos/*.docx
+app/data/exemplos/*.pdf

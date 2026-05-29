@@ -13,7 +13,8 @@ from app.services.ai_service import (
     start_generation,
     get_task_status,
 )
-from app.services.document_service import create_document
+from app.services.document_service import create_document, update_document_file_path
+from app.services.docx_service import generate_docx, copy_to_exemplos
 
 router = APIRouter(prefix="/documentos")
 templates = Jinja2Templates(directory="app/templates")
@@ -104,7 +105,7 @@ def tela_gerando(
 
 
 @router.post("/salvar")
-def salvar_documento(
+async def salvar_documento(
     request: Request,
     tipo: str = Form(...),
     titulo: str = Form(...),
@@ -112,7 +113,7 @@ def salvar_documento(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    form_data = dict(request.form())
+    form_data = dict(await request.form())
     secoes_editadas = []
     for key in sorted(form_data.keys()):
         if key.startswith("secao_titulo_"):
@@ -136,5 +137,21 @@ def salvar_documento(
         content=conteudo_json,
         fontes_rag=",".join(fontes_list),
     )
+
+    try:
+        template_name = f"template_{tipo}.docx"
+        docx_path = generate_docx(
+            template_name=template_name,
+            titulo=titulo,
+            secoes=secoes_editadas,
+            tipo=tipo,
+        )
+        update_document_file_path(db, documento.id, docx_path)
+
+        copy_to_exemplos(docx_path)
+    except FileNotFoundError:
+        pass
+    except Exception:
+        pass
 
     return RedirectResponse(url=f"/documentos/{documento.id}", status_code=302)
