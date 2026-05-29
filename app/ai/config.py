@@ -67,6 +67,13 @@ class AIConfig:
     referencias_dir: str = "app/data/referencias"
     exemplos_dir: str = "app/data/exemplos"
 
+    # Estado de ingestão incremental
+    ingestion_state_path: str = field(
+        default_factory=lambda: os.getenv(
+            "INGESTION_STATE_PATH", "app/data/ingestion_state.json"
+        )
+    )
+
 
 @lru_cache
 def get_ai_config() -> AIConfig:

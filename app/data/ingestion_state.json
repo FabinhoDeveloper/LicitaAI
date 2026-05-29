@@ -1,0 +1,15 @@
+{
+  "referencias": {
+    "4-4-INSTRUCAO-NORMATIVA-SEGES-_ME-No-65-DE-7-DE-JULHO-DE-2021-Pesquisa-de-Precos.pdf": "9d7f1d263a34736e520a5dfbb209a5aa30afe0cfc6f64955812d67601a4bf05b",
+    "INSTRUÇÃO NORMATIVA SEGES Nº 58, DE 8 DE AGOSTO DE 2022 — Portal de Compras do Governo Federal.pdf": "8a554449d66cd52b3107525ae1c67e410ca5864ea265cba3852b8df675281de1",
+    "INSTRUÇÃO NORMATIVA SEGES_ME Nº 81, DE 25 DE NOVEMBRO DE 2022 (_) — Portal de Compras do Governo Federal.pdf": "e4fc7a4e6a19b48d3e8de8ff4d508263aa63aa707acda6703b6b1763e3e1592d",
+    "L14133.pdf": "9ed4242f60d54cb7b3a5a063bf58063e3e4560de2af1123a087e1ef0604dbbaa",
+    "Lcp 123.pdf": "bb5361f6dac220e51cf0e20ebe1eb57eebaf662843747503255323529c60564d",
+    "Manual-versao-SECOM-publicada-no-site-VERSAO-FINAL-ATUALIZADA-1_compressed-1.pdf": "9d935212032eb1e9f5942b6aafb322ae20726f0dc6d790c248ff91fbab6b83a5"
+  },
+  "exemplos": {
+    "dfd_Aquisição_de_Equipamentos_de_Informática.docx": "847ac87048306e12d1cf074438e3de99dbe29455087f22a85e01129cd2450ed3",
+    "dfd_Aquisição_de_Kit_Upgrade_para_manutenção_de_computadores.docx": "d970db503649178313f38724a5d5350c012d0e35f4009a965171629f6cd296cc",
+    "dfd_Aquisição_de_um_servidor_computacional.docx": "686b6b62a2c4f2c304a178cbd8e0527202db3de80976203a22136c90aee586cb"
+  }
+}
